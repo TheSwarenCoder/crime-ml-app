@@ -1283,8 +1283,8 @@ def prediction_dashboard():
 
     location_options = sorted(df_sample["Location_Group"].dropna().astype(str).unique())
     community_options = sorted(df_sample["COMMUNITY"].dropna().astype(str).unique())
-    domestic_options = sorted(df_sample["Domestic"].dropna().unique())
-    arrest_options = sorted(df_sample["Arrest"].dropna().unique())
+    domestic_options = {"False": 0,"True": 1}
+    arrest_options = {"False": 0,"True": 1}
     day_options = sorted(df_sample["Day"].dropna().astype(str).unique())
     time_options = sorted(df_sample["time_period"].dropna().astype(str).unique())
 
@@ -1330,11 +1330,11 @@ def prediction_dashboard():
     c1, c2 = st.columns(2)
 
     with c1:
-        domestic = st.selectbox("Domestic", domestic_options)
+        domestic_label = st.selectbox("Domestic", ["False", "True"]); domestic = 0 if domestic_label == "False" else 1
         day = st.selectbox("Day", day_options)
 
     with c2:
-        arrest = st.selectbox("Arrest", arrest_options)
+        arrest_label = st.selectbox("Arrest", ["False", "True"]); arrest = 0 if arrest_label == "False" else 1
         time_period = st.selectbox("Time", time_options)
 
     if st.button("Predict Risk Level", use_container_width=True):
