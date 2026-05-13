@@ -8,7 +8,7 @@ import joblib
 from plotly.subplots import make_subplots
 
 df2 = pd.read_pickle("df2.pkl")
-df_model = pd.read_pickle("df_model.pkl")
+df_model = joblib.load("df_model.pkl")
 lightgbm_model = joblib.load("lightgbm_model.pkl")
 label_encoders = joblib.load("label_encoders.pkl")
 df_sample = pd.read_pickle("df_sample.pkl")
