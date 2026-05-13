@@ -1360,8 +1360,8 @@ def prediction_dashboard():
                 new_case[col].astype(str)
             )
 
-        new_case["Domestic"] = int(new_case["Domestic"].iloc[0])
-        new_case["Arrest"] = int(new_case["Arrest"].iloc[0])
+        new_case["Domestic"] = bool(int(new_case["Domestic"].iloc[0]))
+        new_case["Arrest"] = bool(int(new_case["Arrest"].iloc[0]))
 
         prediction = lightgbm_model.predict(new_case)[0]
         probabilities = lightgbm_model.predict_proba(new_case)[0]
@@ -1426,11 +1426,13 @@ def prediction_dashboard():
 
         st.plotly_chart(gauge, use_container_width=True)
 
+        domestic_bool = bool(int(domestic))
+        arrest_bool = bool(int(arrest))
         matching_cases = df_sample[
             (df_sample["Location_Group"].astype(str) == location) &
             (df_sample["COMMUNITY"].astype(str) == community) &
-            (df_sample["Domestic"].astype(str) == domestic) &
-            (df_sample["Arrest"].astype(str) == arrest) &
+            (df_sample["Domestic"] == domestic_bool) &
+            (df_sample["Arrest"] == arrest_bool) &
             (df_sample["Day"].astype(str) == day) &
             (df_sample["time_period"].astype(str) == time_period)
         ]
