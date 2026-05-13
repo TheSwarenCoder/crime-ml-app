@@ -5,6 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
 import joblib
+import json
 from plotly.subplots import make_subplots
 
 df2 = pd.read_pickle("df2.pkl")
@@ -1162,14 +1163,6 @@ showing that LightGBM provides the strongest and most balanced performance for t
 ###############################################################################################################################################################################################
 def prediction_dashboard():
 
-    import streamlit as st
-    import pandas as pd
-    import numpy as np
-    import plotly.express as px
-    import plotly.graph_objects as go
-    import joblib
-    import json
-
     @st.cache_resource
     def load_model():
         return joblib.load("lightgbm_model.pkl")
@@ -1290,8 +1283,8 @@ def prediction_dashboard():
 
     location_options = sorted(df_sample["Location_Group"].dropna().astype(str).unique())
     community_options = sorted(df_sample["COMMUNITY"].dropna().astype(str).unique())
-    domestic_options = sorted(df_sample["Domestic"].dropna().astype(str).unique())
-    arrest_options = sorted(df_sample["Arrest"].dropna().astype(str).unique())
+    domestic_options = sorted(df_sample["Domestic"].dropna().unique())
+    arrest_options = sorted(df_sample["Arrest"].dropna().unique())
     day_options = sorted(df_sample["Day"].dropna().astype(str).unique())
     time_options = sorted(df_sample["time_period"].dropna().astype(str).unique())
 
@@ -1355,10 +1348,20 @@ def prediction_dashboard():
             "time_period": time_period
         }])
 
-        for col in features:
+        categorical_cols = [
+            "Location_Group",
+            "COMMUNITY",
+            "Day",
+            "time_period"
+        ]
+
+        for col in categorical_cols:
             new_case[col] = label_encoders[col].transform(
                 new_case[col].astype(str)
             )
+
+        new_case["Domestic"] = int(new_case["Domestic"].iloc[0])
+        new_case["Arrest"] = int(new_case["Arrest"].iloc[0])
 
         prediction = lightgbm_model.predict(new_case)[0]
         probabilities = lightgbm_model.predict_proba(new_case)[0]
