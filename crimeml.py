@@ -1288,6 +1288,24 @@ def prediction_dashboard():
     day_options = sorted(df_sample["Day"].dropna().astype(str).unique())
     time_options = sorted(df_sample["time_period"].dropna().astype(str).unique())
 
+
+    st.info("""
+    CASE INPUT LEGEND
+
+    Location → General location category where the crime incident occurred (e.g. street, residence, store).
+
+    Community → Specific Chicago community area where the incident took place.
+
+    Domestic → Whether the incident involved a domestic-related situation.
+
+    Arrest → Whether an arrest was made for the incident.
+
+    Day → Day of the week the incident occurred.
+
+    Time → General time period when the incident happened.
+    """)
+
+
     st.markdown("<div class='section-title'>Case Input</div>", unsafe_allow_html=True)
 
     location = st.selectbox("Location", location_options)
@@ -1439,6 +1457,12 @@ def prediction_dashboard():
 
         st.markdown("<div class='section-title'>Historical Context</div>", unsafe_allow_html=True)
 
+        st.info("""
+        HISTORICAL CONTEXT
+
+        This section shows past crime incidents that closely match the case details you selected, 
+        helping provide historical context for the model's prediction.
+        """)
         s1, s2, s3 = st.columns(3)
 
         with s1:
